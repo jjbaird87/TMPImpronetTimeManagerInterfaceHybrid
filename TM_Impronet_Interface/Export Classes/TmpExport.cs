@@ -46,7 +46,7 @@ namespace TM_Impronet_Interface.Export_Classes
 
             try
             {                
-                iCount = improDataAccess.GetTransactionCount(startDate, endDate);
+                iCount = improDataAccess.GetTransactionCount(startDate, endDate, automated);
                 OnProgress(0, 0, iCount + @" record(s) found");
                 
                 var myReader = improDataAccess.GetUnprocessedTransactions();

@@ -78,7 +78,7 @@ namespace TM_Impronet_Interface.Classes
             }
         }
 
-        public int GetTransactionCount(DateTime startDate, DateTime endDate)
+        public int GetTransactionCount(DateTime startDate, DateTime endDate, bool automated)
         {
             try
             {
@@ -91,7 +91,11 @@ namespace TM_Impronet_Interface.Classes
 
                 Command.CommandText =
                     "SELECT COUNT(*) FROM TRANSACK " +
-                    "WHERE TR_PROCESSED = 0 AND TR_MSTSQ <> 0";
+                    "WHERE TR_MSTSQ <> 0 ";                
+                if (!automated)
+                    Command.CommandText += "TR_PROCESSED = 0";
+                else
+                    Command.CommandText += "AND TR_DATE >= @START_DATE AND TR_DATE <= @END_DATE";
 
 
                 var fbCommand = Command as FbCommand;
@@ -117,6 +121,20 @@ namespace TM_Impronet_Interface.Classes
         }
 
         public IDataReader GetUnprocessedTransactions()
+        {
+            Command = GetCommandObject();
+            Command.Connection = Connection;
+            Connection.Open();
+
+            Command.CommandText =
+                "SELECT * FROM TRANSACK a JOIN EMPLOYEE b ON a.TR_MSTSQ = b.MST_SQ  " +
+                "WHERE TR_PROCESSED = 0";
+
+            Command.CommandTimeout = 0;
+            return Command.ExecuteReader();
+        }
+
+        public IDataReader GetTransactions(DateTime startDate, DateTime endDate)
         {
             Command = GetCommandObject();
             Command.Connection = Connection;
