@@ -93,7 +93,7 @@ namespace TM_Impronet_Interface.Classes
                     "SELECT COUNT(*) FROM TRANSACK " +
                     "WHERE TR_MSTSQ <> 0 ";                
                 if (!automated)
-                    Command.CommandText += "TR_PROCESSED = 0";
+                    Command.CommandText += "AND TR_PROCESSED = 0";
                 else
                     Command.CommandText += "AND TR_DATE >= @START_DATE AND TR_DATE <= @END_DATE";
 
@@ -127,8 +127,7 @@ namespace TM_Impronet_Interface.Classes
             Connection.Open();
 
             Command.CommandText =
-                "SELECT * FROM TRANSACK a JOIN EMPLOYEE b ON a.TR_MSTSQ = b.MST_SQ  " +
-                "WHERE TR_PROCESSED = 0";
+                "SELECT * FROM TRANSACK a JOIN EMPLOYEE b ON a.TR_MSTSQ = b.MST_SQ WHERE TR_PROCESSED = 0";
 
             Command.CommandTimeout = 0;
             return Command.ExecuteReader();
