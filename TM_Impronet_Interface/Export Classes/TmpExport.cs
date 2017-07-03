@@ -49,7 +49,7 @@ namespace TM_Impronet_Interface.Export_Classes
                 iCount = improDataAccess.GetTransactionCount(startDate, endDate, automated);
                 OnProgress(0, 0, iCount + @" record(s) found");
                 
-                var myReader = improDataAccess.GetUnprocessedTransactions();
+                var myReader = improDataAccess.GetUnprocessedTransactions(startDate, endDate);
 
                 //Read Current Mappings
                 var full = Settings.Default.Mappings;

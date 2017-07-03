@@ -94,8 +94,10 @@ namespace TM_Impronet_Interface.Classes
                     "WHERE TR_MSTSQ <> 0 ";                
                 if (!automated)
                     Command.CommandText += "AND TR_PROCESSED = 0";
-                else
-                    Command.CommandText += "AND TR_DATE >= @START_DATE AND TR_DATE <= @END_DATE";
+
+
+
+                Command.CommandText += "AND TR_DATE >= @START_DATE AND TR_DATE <= @END_DATE";
 
 
                 var fbCommand = Command as FbCommand;
@@ -120,7 +122,7 @@ namespace TM_Impronet_Interface.Classes
             }
         }
 
-        public IDataReader GetUnprocessedTransactions()
+        public IDataReader GetUnprocessedTransactions(DateTime startDate, DateTime endDate)
         {
             Command = GetCommandObject();
             Command.Connection = Connection;
@@ -129,6 +131,7 @@ namespace TM_Impronet_Interface.Classes
             Command.CommandText =
                 "SELECT * FROM TRANSACK a JOIN EMPLOYEE b ON a.TR_MSTSQ = b.MST_SQ WHERE TR_PROCESSED = 0";
 
+            Command.CommandText += $" AND TR_DATE >= {startDate.ToString("yyyMMdd")} AND TR_DATE <= {endDate.ToString("yyyMMdd")}";
             Command.CommandTimeout = 0;
             return Command.ExecuteReader();
         }
@@ -142,7 +145,7 @@ namespace TM_Impronet_Interface.Classes
             Command.CommandText =
                 "SELECT * FROM TRANSACK a JOIN EMPLOYEE b ON a.TR_MSTSQ = b.MST_SQ  " +
                 "WHERE TR_PROCESSED = 0";
-
+            Command.CommandText += $"AND TR_DATE >= {startDate.ToString("yyyMMdd")} AND TR_DATE <= {endDate.ToString("yyyMMdd")}";
             Command.CommandTimeout = 0;
             return Command.ExecuteReader();
         }
